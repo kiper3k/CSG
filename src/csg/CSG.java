@@ -159,14 +159,28 @@ public class CSG {
                 shapes.add(new Ellipse2D.Double(center.x-a, center.y-b, 2*a, 2*b));
         }
         
-        try{
-          f = new File("resources/output3.jpg");  //output file path
-          g2.setColor(Color.GREEN);
-          g2.draw(shapes.get(1));
-          ImageIO.write(image, "jpg", f);
-          System.out.println("Writing complete.");
-        }catch(IOException e){
-          System.out.println("Error: "+e);
+//        try{
+//          f = new File("resources/output3.jpg");  //output file path
+//          g2.setColor(Color.GREEN);
+//          g2.draw(shapes.get(1));
+//          ImageIO.write(image, "jpg", f);
+//          System.out.println("Writing complete.");
+//        }catch(IOException e){
+//          System.out.println("Error: "+e);
+//        }
+
+
+        // check for shapes position
+        for (int i=0; i<shapes.size(); i++){
+            for(int j=i+1; j<shapes.size(); j++){
+                if (shapes.get(i).contains(shapes.get(j).getBounds2D())){
+                    System.out.println(i+" zawiera "+j);
+                } else if (shapes.get(j).contains(shapes.get(i).getBounds2D())){
+                    System.out.println(j+" zawiera "+i);
+                } else {
+                    System.out.println(i+" jest rozłączne z "+j);
+                }
+            }
         }
     }
     
