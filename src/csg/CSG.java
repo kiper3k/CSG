@@ -140,6 +140,34 @@ public class CSG {
                 
                 shapes.add(new Rectangle2D.Double(p2.x, p2.y, p2.distance(p1), p2.distance(p3)));
         }
+        
+        // create java.awt ellipses
+        Point2D_F64 center;
+        double a, b, phi;
+        for (int i=0; i<foundRectangles.size(); i++){
+            System.out.println(foundEllipses.get(i).getClass());
+                center = foundEllipses.get(i).ellipse.center;
+                a = foundEllipses.get(i).ellipse.a;
+                b = foundEllipses.get(i).ellipse.b;
+                phi = foundEllipses.get(i).ellipse.phi;
+                System.out.println(center);
+                System.out.println(a);
+                System.out.println(b);
+                System.out.println(phi);
+                
+                
+                shapes.add(new Ellipse2D.Double(center.x-a, center.y-b, 2*a, 2*b));
+        }
+        
+        try{
+          f = new File("resources/output3.jpg");  //output file path
+          g2.setColor(Color.GREEN);
+          g2.draw(shapes.get(1));
+          ImageIO.write(image, "jpg", f);
+          System.out.println("Writing complete.");
+        }catch(IOException e){
+          System.out.println("Error: "+e);
+        }
     }
     
 }
