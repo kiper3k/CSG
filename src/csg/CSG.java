@@ -127,16 +127,16 @@ public class CSG {
                 p2 = foundRectangles.get(i).vertexes.get(1);
                 p3 = foundRectangles.get(i).vertexes.get(2);
                 p4 = foundRectangles.get(i).vertexes.get(3);
-                System.out.println(p1);
-                System.out.println(p2);
-                System.out.println(p3);
-                System.out.println(p4);
-                System.out.println(p1.distance(p2));
-                System.out.println(p2.distance(p3));
-                
-                System.out.println(foundRectangles.get(i).vertexes.get(0).getClass());
-                System.out.println(foundRectangles.get(i).vertexes.get(0).y);
-                System.out.println(foundRectangles.get(i).getSideLength(i));
+//                System.out.println(p1);
+//                System.out.println(p2);
+//                System.out.println(p3);
+//                System.out.println(p4);
+//                System.out.println(p1.distance(p2));
+//                System.out.println(p2.distance(p3));
+//                
+//                System.out.println(foundRectangles.get(i).vertexes.get(0).getClass());
+//                System.out.println(foundRectangles.get(i).vertexes.get(0).y);
+//                System.out.println(foundRectangles.get(i).getSideLength(i));
                 
                 shapes.add(new Rectangle2D.Double(p2.x, p2.y, p2.distance(p1), p2.distance(p3)));
         }
@@ -149,26 +149,18 @@ public class CSG {
                 center = foundEllipses.get(i).ellipse.center;
                 a = foundEllipses.get(i).ellipse.a;
                 b = foundEllipses.get(i).ellipse.b;
-                phi = foundEllipses.get(i).ellipse.phi;
-                System.out.println(center);
-                System.out.println(a);
-                System.out.println(b);
-                System.out.println(phi);
-                
+//                phi = foundEllipses.get(i).ellipse.phi;
+//                System.out.println(center);
+//                System.out.println(a);
+//                System.out.println(b);
+//                System.out.println(phi);
                 
                 shapes.add(new Ellipse2D.Double(center.x-a, center.y-b, 2*a, 2*b));
         }
         
-//        try{
-//          f = new File("resources/output3.jpg");  //output file path
-//          g2.setColor(Color.GREEN);
-//          g2.draw(shapes.get(1));
-//          ImageIO.write(image, "jpg", f);
-//          System.out.println("Writing complete.");
-//        }catch(IOException e){
-//          System.out.println("Error: "+e);
-//        }
-
+        for (int i=0; i<shapes.size(); i++){
+            System.out.println(shapes.get(i).toString());
+        }
 
         // check for shapes position
         for (int i=0; i<shapes.size(); i++){
