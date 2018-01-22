@@ -17,7 +17,7 @@ public class Rectangle extends Rectangle2D.Double{
         super();
     }
 
-    private Rectangle(double d, double d0, double width, double height) {
+    Rectangle(double d, double d0, double width, double height) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
