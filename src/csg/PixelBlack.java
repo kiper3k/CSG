@@ -28,9 +28,9 @@ public class PixelBlack {
     }
     
 
-    public static void main(String[] args) throws IOException {
-        Color[][] colors = loadPixelsFromImage(new File("C:\\Users\\abc\\Desktop\\blackandwhite.jpg"));
-       
-    }
+//    public static void main(String[] args) throws IOException {
+//        Color[][] colors = loadPixelsFromImage(new File("C:\\Users\\abc\\Desktop\\blackandwhite.jpg"));
+//       
+//    }
   
 }
