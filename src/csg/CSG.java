@@ -5,10 +5,33 @@
  */
 package csg;
 
-import java.awt.image.BufferedImage;
+import boofcv.alg.filter.binary.GThresholdImageOps;
+import boofcv.alg.filter.binary.ThresholdImageOps;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Ellipse2D;
+
+import boofcv.alg.shapes.ellipse.BinaryEllipseDetector;
+import boofcv.alg.shapes.polygon.DetectPolygonBinaryGrayRefine;
+import boofcv.factory.shape.ConfigPolygonDetector;
+import boofcv.factory.shape.FactoryShapeDetector;
+import boofcv.gui.ListDisplayPanel;
+import boofcv.gui.feature.VisualizeShapes;
+import boofcv.gui.image.ShowImages;
+import boofcv.io.image.ConvertBufferedImage;
+import boofcv.struct.image.GrayU8;
+import georegression.struct.shapes.Polygon2D_F64;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import org.ddogleg.struct.FastQueue;
 
 /**
  *
@@ -21,26 +44,65 @@ public class CSG {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-//        File bmpFile = new File("bmpImage.bmp");
-//        BufferedImage image = ImageIO.read(bmpFile);
-        
-        
-//        BufferedImage image = null;
+
         File f = null;
         BufferedImage image = null;
-            
-        int width = 640;    //width of the image
-        int height = 400;   //height of the image
+        int width;    //width of the image
+        int height;   //height of the image
+        
+        List<Shape> shapes = new ArrayList<>();
+        shapes.add(new Rectangle2D.Double(3.0, 3.0, 5.0, 2.0));
+        System.out.println(shapes.get(0).contains(0, 0));
+        System.out.println(shapes.get(0).contains(4, 4));
+        shapes.add(new Rectangle2D.Double(2.0, 2.0, 2.0, 4.0));
+        System.out.println(shapes.get(0).intersects((Rectangle2D) shapes.get(1)));
+        
+        BinaryEllipseDetector<GrayU8> ellipseDetector;
+        ellipseDetector = FactoryShapeDetector.ellipse(null, GrayU8.class);
+        
+        ConfigPolygonDetector config = new ConfigPolygonDetector(4,4);
+	DetectPolygonBinaryGrayRefine<GrayU8> rectangleDetector;
+        rectangleDetector = FactoryShapeDetector.polygon(config, GrayU8.class);
 
         //read image
         try{
           f = new File("resources/input.jpg"); //image file path
-          image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//          image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
           image = ImageIO.read(f);
           System.out.println("Reading complete.");
+//          System.out.println(image.getHeight() + " " + image.getWidth());
         }catch(IOException e){
           System.out.println("Error: "+e);
         }
+        
+        GrayU8 input = ConvertBufferedImage.convertFromSingle(image, null, GrayU8.class);
+        GrayU8 binary = new GrayU8(input.width,input.height);
+        
+        int threshold = GThresholdImageOps.computeOtsu(input, 0, 255);
+        ThresholdImageOps.threshold(input, binary, threshold, true);
+        
+        ellipseDetector.process(input, binary);
+        FastQueue<BinaryEllipseDetector.EllipseInfo> foundEllipses = ellipseDetector.getFound();
+        Graphics2D g2 = image.createGraphics();
+        g2.setStroke(new BasicStroke(3));
+        g2.setColor(Color.RED);
+        for (int i=0; i<foundEllipses.size; i++) {
+            VisualizeShapes.drawEllipse(foundEllipses.get(i).ellipse, g2);
+        }
+        
+        rectangleDetector.process(input, binary);
+        List<Polygon2D_F64> foundRectangles = rectangleDetector.getPolygons(null, null);
+        g2.setColor(Color.BLUE);
+        for (int i=0; i<foundRectangles.size(); i++){
+            VisualizeShapes.drawPolygon(foundRectangles.get(0), true, g2);
+        }
+        
+        ListDisplayPanel panel = new ListDisplayPanel();
+        panel.addImage(image,new File("figures").getName());
+        ShowImages.showWindow(panel,"Detected Shapes",true);
+        
+        width = image.getWidth();
+        height = image.getHeight();
 
         //write image
         try{
